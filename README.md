@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # บันทึกค่าแอร์รายวัน (PWA + Cloudflare Pages Functions + D1)
 
 ฟีเจอร์:
@@ -59,3 +60,6 @@ wrangler pages dev . --d1=DB
 - Deploy
 
 > ถ้าต้องการ seed รายชื่อผู้จ่าย ให้เพิ่มผ่านหน้า "รายชื่อ" หรือ insert เองในตาราง `people`
+=======
+# airbill
+>>>>>>> 29089489619ef14ce4aa4de12f95294783586869
