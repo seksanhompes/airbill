@@ -1,0 +1,7 @@
+name = "air-bill-pwa"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "air-bill-db"
+database_id = "855a682e-e316-4248-b4eb-2feee0f0f64b"

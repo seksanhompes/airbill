@@ -1,0 +1,19 @@
+-- 001_init.sql
+PRAGMA foreign_keys=ON;
+
+CREATE TABLE IF NOT EXISTS people (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  active INTEGER NOT NULL DEFAULT 1,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id TEXT PRIMARY KEY,
+  person_id TEXT NOT NULL,
+  amount REAL NOT NULL,
+  paid_on TEXT NOT NULL, -- YYYY-MM-DD
+  note TEXT,
+  created_at INTEGER NOT NULL,
+  FOREIGN KEY (person_id) REFERENCES people(id) ON UPDATE CASCADE ON DELETE RESTRICT
+);

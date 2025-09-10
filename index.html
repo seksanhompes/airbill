@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>บันทึกค่าแอร์</title>
+  <meta name="theme-color" content="#1b1b1d">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta name="description" content="PWA สำหรับบันทึกค่าแอร์รายวัน พร้อมประวัติ รายชื่อ และกราฟ">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="title">บันทึกค่าแอร์</div>
+      <div id="netBadge" class="badge">เชื่อมต่อ...</div>
+    </header>
+
+    <main>
+      <!-- Tab: บันทึก -->
+      <section id="tab-record" class="grid" data-tab>
+        <div class="card grid">
+          <div>
+            <label>วันที่จ่าย</label>
+            <input id="paidOn" type="date">
+          </div>
+          <div>
+            <label>ผู้จ่าย</label>
+            <select id="personSelect"></select>
+            <div class="row" style="margin-top:6px">
+              <button class="btn-sm ghost" id="btnAddPersonQuick">+ เพิ่มชื่ออย่างเร็ว</button>
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <div>
+              <label>จำนวนเงิน (บาท)</label>
+              <input id="amount" type="number" inputmode="decimal" step="0.01" placeholder="0.00">
+            </div>
+            <div>
+              <label>หมายเหตุ</label>
+              <input id="note" type="text" placeholder="เช่น ค่าไฟรวม">
+            </div>
+          </div>
+          <button id="btnSave">💾 บันทึกค่าแอร์</button>
+          <div id="saveHint" class="kbd" style="display:none"></div>
+        </div>
+
+        <div class="card">
+          <div class="row wrap" style="justify-content:space-between">
+            <div>
+              <div class="meta">บันทึกล่าสุด</div>
+              <div id="lastSaved" class="meta">—</div>
+            </div>
+            <button id="btnSync" class="ghost btn-sm">⟳ ซิงค์ข้อมูลออฟไลน์</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab: ประวัติ -->
+      <section id="tab-history" class="grid" data-tab hidden>
+        <div class="card grid">
+          <div class="grid cols-2">
+            <div>
+              <label>ตั้งแต่วันที่</label>
+              <input id="fromDate" type="date">
+            </div>
+            <div>
+              <label>ถึงวันที่</label>
+              <input id="toDate" type="date">
+            </div>
+          </div>
+          <div>
+            <label>กรองตามผู้จ่าย</label>
+            <select id="filterPerson"></select>
+          </div>
+          <button id="btnLoadHistory" class="ghost">แสดงประวัติ</button>
+        </div>
+
+        <div class="card">
+          <div class="row" style="justify-content:space-between">
+            <div class="meta">รวมทั้งหมด</div>
+            <div id="historyTotal" class="amt">฿0.00</div>
+          </div>
+          <div id="historyList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- Tab: รายชื่อ -->
+      <section id="tab-people" class="grid" data-tab hidden>
+        <div class="card grid">
+          <div class="grid cols-2">
+            <div>
+              <label>เพิ่มชื่อใหม่</label>
+              <input id="newPerson" type="text" placeholder="เช่น คุณเอก">
+            </div>
+            <div style="align-self:end">
+              <button id="btnAddPerson">+ เพิ่มชื่อ</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="meta">จัดการรายชื่อ</div>
+          <div id="peopleList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- Tab: กราฟ -->
+      <section id="tab-charts" class="grid" data-tab hidden>
+        <div class="card grid">
+          <div class="grid cols-2">
+            <div>
+              <label>ช่วงเวลา</label>
+              <select id="groupBy">
+                <option value="day">รายวัน</option>
+                <option value="month">รายเดือน</option>
+                <option value="year">รายปี</option>
+              </select>
+            </div>
+            <div>
+              <label>ผู้จ่าย</label>
+              <select id="chartPerson"></select>
+            </div>
+          </div>
+          <div class="grid cols-2">
+            <div><label>ตั้งแต่</label><input id="chartFrom" type="date"></div>
+            <div><label>ถึง</label><input id="chartTo" type="date"></div>
+          </div>
+          <button id="btnLoadChart" class="ghost">วาดกราฟ</button>
+        </div>
+        <div class="card">
+          <canvas id="chart" height="220"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar">
+      <button data-tabbtn="record" class="active"><span class="ico">📝</span>บันทึก</button>
+      <button data-tabbtn="history"><span class="ico">📜</span>ประวัติ</button>
+      <button data-tabbtn="people"><span class="ico">👤</span>รายชื่อ</button>
+      <button data-tabbtn="charts"><span class="ico">📈</span>กราฟ</button>
+    </nav>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/app.js" type="module"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+</body>
+</html>
