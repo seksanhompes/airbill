@@ -242,8 +242,16 @@ function initDates(){
 }
 
 function initUI(){
-  // tab events
-  $$('[data-tabbtn]').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tabbtn)));
+  // จับคลิกแท็บแบบ delegate (กันกรณีบางเครื่อง bind ไม่ทัน)
+  const bar = document.querySelector('.tabbar');
+  bar.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-tabbtn]');
+    if(!btn) return;
+    e.preventDefault();
+    switchTab(btn.dataset.tabbtn);
+  });
+
+  // ปุ่มอื่น ๆ
   $('#btnSave').onclick = savePayment;
   $('#btnAddPerson').onclick = () => addPerson($('#newPerson').value);
   $('#btnAddPersonQuick').onclick = async () => {
